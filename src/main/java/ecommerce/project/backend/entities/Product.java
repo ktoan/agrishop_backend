@@ -15,17 +15,23 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product extends BaseEntity {
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String shortDescription;
+    @Column(nullable = false, columnDefinition = "text")
     private String information;
+    @Column(nullable = false)
     private Long amount;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "product_image", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "image_id"))
     private Set<Image> images = new HashSet<>();
+    @Column(nullable = false)
     private Double saleOff;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
+    @Column(nullable = false)
     private Double price;
 
     public void addImage(Image image) {

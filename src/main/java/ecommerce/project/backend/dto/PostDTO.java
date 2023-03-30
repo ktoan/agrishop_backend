@@ -6,8 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CategoryDTO extends BaseDTO {
-    private String code;
-    private String name;
+public class PostDTO extends BaseDTO {
+    private String title;
+    private String shortDescription;
+    private String content;
     private Image image;
+    private UserDTO author;
 }

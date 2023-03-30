@@ -2,6 +2,7 @@ package ecommerce.project.backend.services;
 
 import ecommerce.project.backend.dto.UserDTO;
 import ecommerce.project.backend.entities.User;
+import ecommerce.project.backend.requests.ChangePasswordRequest;
 import ecommerce.project.backend.requests.LoginRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,4 +16,6 @@ public interface UserService {
     LoginRequest validateLoginRequest(LoginRequest loginRequest);
     void confirmToken(String token);
     void resendConfirmToken(String email);
+    void changePassword(Long userId, ChangePasswordRequest changePasswordRequest);
+    void deleteUser(Long userId);
 }

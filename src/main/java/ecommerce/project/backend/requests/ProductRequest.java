@@ -27,4 +27,5 @@ public class ProductRequest {
     private String[] categoryListCode;
     @NotNull(message = "Product price can't be null!")
     private Double price;
+    private Double saleOff = 0.0;
 }

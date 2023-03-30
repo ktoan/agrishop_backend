@@ -1,5 +1,6 @@
 package ecommerce.project.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ecommerce.project.backend.enums.Gender;
 import ecommerce.project.backend.enums.Role;
 import lombok.*;
@@ -11,6 +12,8 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -35,6 +38,8 @@ public class User extends BaseEntity implements UserDetails {
     private Gender gender;
     private Boolean locked;
     private Boolean enabled;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Cart> cart = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

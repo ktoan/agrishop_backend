@@ -1,9 +1,11 @@
-package ecommerce.project.backend.controller;
+package ecommerce.project.backend.controllers;
 
 import ecommerce.project.backend.config.jwt.JwtTokenUtils;
 import ecommerce.project.backend.dto.UserDTO;
 import ecommerce.project.backend.requests.LoginRequest;
 import ecommerce.project.backend.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/v1/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication")
 public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -27,6 +30,7 @@ public class AuthController {
     private final UserDetailsService userDetailsService;
 
     @GetMapping("/loadUser")
+    @Operation(summary = "Get user is logged in - a.k.a get the user in context")
     public ResponseEntity<Object> loadUser() {
         UserDTO loadedUser = userService.loadUser();
         Map<String, Object> resp = new HashMap<>();
@@ -36,6 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Create new user")
     public ResponseEntity<Object> registerUser(@Valid @RequestBody UserDTO userDTO) {
         userService.createUser(userDTO);
         Map<String, Object> resp = new HashMap<>();
@@ -45,6 +50,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Login user to system")
     public ResponseEntity<Object> loginUser(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
         loginRequest = userService.validateLoginRequest(loginRequest);
         authenticate(loginRequest.getEmail(), loginRequest.getPassword());
@@ -59,6 +65,7 @@ public class AuthController {
     }
 
     @PostMapping("/confirm-registration")
+    @Operation(summary = "Verify the email by token")
     public ResponseEntity<Object> confirmRegistration(@RequestParam("token") String token) {
         userService.confirmToken(token);
         Map<String, Object> resp = new HashMap<>();
@@ -68,6 +75,7 @@ public class AuthController {
     }
 
     @PostMapping("/resend-confirm-code")
+    @Operation(summary = "Resend the code to verify the user own account")
     public ResponseEntity<Object> resendConfirmRegistration(@RequestParam("email") String email) {
         userService.resendConfirmToken(email);
         Map<String, Object> resp = new HashMap<>();

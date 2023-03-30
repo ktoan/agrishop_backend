@@ -34,6 +34,12 @@ public class SecurityConfig {
     };
 
     private final String[] PUBLIC_GET_ALLOWED_ROUTES = {
+            "/swagger-ui/*",
+            "/v3/api-docs/**",
+            "/api/v1/users/*",
+            "/api/v1/users/**",
+            "/api/v1/posts/*",
+            "/api/v1/posts/**",
             "/api/v1/categories/*",
             "/api/v1/categories/**",
             "/api/v1/products/*",
@@ -41,10 +47,21 @@ public class SecurityConfig {
     };
 
     private final String[] ADMIN_POST_ALLOW_ROUTES = {
+            "/api/v1/posts/*",
+            "/api/v1/posts/**",
             "/api/v1/categories/*",
             "/api/v1/categories/**",
             "/api/v1/products/*",
             "/api/v1/products/**",
+    };
+
+    private final String[] ADMIN_PUT_ALLOW_ROUTES = {
+            "/api/v1/categories/*",
+            "/api/v1/categories/**",
+            "/api/v1/products/*",
+            "/api/v1/products/**",
+            "/api/v1/posts/*",
+            "/api/v1/posts/**",
     };
 
     @Bean
@@ -54,10 +71,14 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, ADMIN_POST_ALLOW_ROUTES)
                 .hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT, ADMIN_PUT_ALLOW_ROUTES)
+                .hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, PUBLIC_POST_ALLOWED_ROUTES)
                 .permitAll()
                 .antMatchers(HttpMethod.GET, PUBLIC_GET_ALLOWED_ROUTES)
                 .permitAll()
+                .antMatchers(HttpMethod.DELETE, "/**")
+                .hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()

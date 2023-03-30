@@ -14,8 +14,8 @@ public class ProductDTO extends BaseDTO {
     private String shortDescription;
     private String information;
     private Long amount;
-    private Set<Image> images = new HashSet<>();
+    private Set<Image> images;
     private Double saleOff;
-    private Set<CategoryDTO> categories = new HashSet<>();
+    private Set<CategoryDTO> categories;
     private Double price;
 }

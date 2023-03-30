@@ -7,6 +7,7 @@ import ecommerce.project.backend.enums.Role;
 import ecommerce.project.backend.exceptions.*;
 import ecommerce.project.backend.mappers.UserMapper;
 import ecommerce.project.backend.repositories.UserRepository;
+import ecommerce.project.backend.requests.ChangePasswordRequest;
 import ecommerce.project.backend.requests.LoginRequest;
 import ecommerce.project.backend.services.ConfirmationTokenService;
 import ecommerce.project.backend.services.UserService;
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public String uploadAvatar(Long userId, MultipartFile multipartFile) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format(USER_NOT_FOUND_ID_MSG, userId)));
+        User user = findUserById(userId);
         if (!Objects.equals(user.getId(), contextService.loadUserFromContext().getId())) {
             throw new NotAccessException();
         }
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO updateUser(Long userId, UserDTO userDTO) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format(USER_NOT_FOUND_ID_MSG, userId)));
+        User user = findUserById(userId);
         if (!userDTO.getEmail().equals(user.getEmail())) {
             throw new BadRequestException("Email isn't editable!");
         }
@@ -118,6 +119,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         updatedUser.setRole(user.getRole());
         updatedUser.setAvatar(user.getAvatar());
         updatedUser.setCreatedDate(user.getCreatedDate());
+        updatedUser.setPassword(user.getPassword());
         updatedUser = saveUser(updatedUser);
         return userMapper.toDTO(updatedUser);
     }
@@ -157,5 +159,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         ConfirmationToken token = new ConfirmationToken(confirmationToken, new Date(System.currentTimeMillis() + 15 * 60 * 1000), user);
         confirmationTokenService.saveToken(token);
         emailService.send("Confirm your registration", email, emailBuilder.buildConfirmationEmail(user.getFullName(), confirmationToken));
+    }
+
+    @Override
+    public void changePassword(Long userId, ChangePasswordRequest changePasswordRequest) {
+        User user = findUserById(userId);
+        if (!Objects.equals(user.getId(), contextService.loadUserFromContext().getId())) {
+            throw new NotAccessException();
+        }
+        if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())) {
+            throw new BadRequestException("Your password is incorrect!");
+        }
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+        saveUser(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        User user = findUserById(userId);
+        userRepository.delete(user);
+    }
+
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format(USER_NOT_FOUND_ID_MSG, userId)));
     }
 }

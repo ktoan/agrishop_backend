@@ -1,6 +1,7 @@
 package ecommerce.project.backend.exceptions;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,19 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> methodArgumentNotValid(MethodArgumentNotValidException e) {
+        Map<String, Object> resp = new HashMap<>();
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
+        resp.put("success", false);
+        resp.put("timestamp", LocalDateTime.now().toString());
+        resp.put("errors", errors);
+        return ResponseEntity.status(400).body(resp);
+    }
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<Object> bind(BindException e) {
         Map<String, Object> resp = new HashMap<>();
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : e.getBindingResult().getFieldErrors()) {

@@ -1,16 +1,18 @@
 package ecommerce.project.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ecommerce.project.backend.entities.Post;
 import ecommerce.project.backend.enums.Gender;
 import ecommerce.project.backend.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.*;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,6 +26,7 @@ public class UserDTO extends BaseDTO {
     private String email;
     @NotNull(message = "Password can't be null!")
     @NotBlank(message = "Password can't be blank!")
+    @Size(min = 6, message = "Password at least 6!")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @NotNull(message = "Phone number can't be null!")
@@ -38,4 +41,5 @@ public class UserDTO extends BaseDTO {
     private Role role;
     private Boolean locked;
     private Boolean enabled;
+    private Set<CartDTO> cart;
 }

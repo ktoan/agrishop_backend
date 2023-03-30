@@ -4,6 +4,7 @@ import ecommerce.project.backend.dto.ProductDTO;
 import ecommerce.project.backend.entities.Category;
 import ecommerce.project.backend.entities.Image;
 import ecommerce.project.backend.entities.Product;
+import ecommerce.project.backend.exceptions.NotFoundException;
 import ecommerce.project.backend.mappers.ProductMapper;
 import ecommerce.project.backend.repositories.ProductRepository;
 import ecommerce.project.backend.requests.ProductRequest;
@@ -21,8 +22,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ecommerce.project.backend.constants.Messaging.PRODUCT_NOT_FOUND_ID_MSG;
 
 @Service
 @RequiredArgsConstructor
@@ -63,7 +67,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PagingResponse fetchProductByPaging(String s, Integer limit, Integer page, String sortBy, String sortDir) {
+    public ProductDTO getProductById(Long productId) {
+        Product product = findProductById(productId);
+        return productMapper.toDTO(product);
+    }
+
+    @Override
+    public PagingResponse fetchProductsByPaging(String s, Integer limit, Integer page, String sortBy, String sortDir) {
         Sort sort = sortUtils.getSort(sortBy, sortDir);
         Pageable pageable = PageRequest.of(page, limit, sort);
         Page<Product> productPage = productRepository.findAllByNameContaining(s, pageable);
@@ -71,9 +81,45 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> fetchAllProduct(String s, String sortBy, String sortDir) {
+    public List<ProductDTO> fetchAllProducts(String s, String sortBy, String sortDir) {
         Sort sort = sortUtils.getSort(sortBy, sortDir);
         List<Product> products = productRepository.findAllByNameContaining(s, sort);
         return products.stream().map(productMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductDTO updateProduct(Long productId, ProductRequest productRequest) {
+        Product product = findProductById(productId);
+        product.setName(productRequest.getName());
+        product.setShortDescription(productRequest.getShortDescription());
+        product.setInformation(productRequest.getInformation());
+        product.setAmount(productRequest.getAmount());
+        product.setSaleOff(product.getSaleOff());
+        product.setImages(new HashSet<>());
+        for (MultipartFile file : productRequest.getImages()) {
+            String url = fileService.uploadImage(file);
+            Image image = new Image(url);
+            image = imageService.saveImage(image);
+            product.addImage(image);
+        }
+        product.setCategories(new HashSet<>());
+        for (String categoryCode : productRequest.getCategoryListCode()) {
+            Category category = categoryService.getCategoryByCode(categoryCode);
+            product.addCategory(category);
+        }
+        product.setPrice(productRequest.getPrice());
+        product = saveProduct(product);
+        return productMapper.toDTO(product);
+    }
+
+    @Override
+    public void deleteProduct(Long productId) {
+        Product product = findProductById(productId);
+        productRepository.delete(product);
+    }
+
+    @Override
+    public Product findProductById(Long productId) {
+        return productRepository.findById(productId).orElseThrow(() -> new NotFoundException(String.format(PRODUCT_NOT_FOUND_ID_MSG, productId)));
     }
 }
