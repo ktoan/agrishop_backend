@@ -155,6 +155,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user.getEnabled()) {
             throw new NotAccessException("User is enabled! Then you can try login process.");
         }
+        if (confirmationTokenService.isUserHaveRegistrationToken(user)) {
+            throw new NotAccessException("User already have token! Try check your email.");
+        }
         String confirmationToken = UUID.randomUUID().toString();
         ConfirmationToken token = new ConfirmationToken(confirmationToken, new Date(System.currentTimeMillis() + 15 * 60 * 1000), user);
         confirmationTokenService.saveToken(token);

@@ -80,7 +80,7 @@ public class AuthController {
         userService.resendConfirmToken(email);
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", true);
-        resp.put("msg", "Confirm registration successfully! Welcome to our system!");
+        resp.put("msg", "Confirmation token has sent for you, check your email please!");
         return ResponseEntity.ok(resp);
     }
 

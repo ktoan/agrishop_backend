@@ -4,7 +4,6 @@ import ecommerce.project.backend.entities.Image;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -18,4 +17,5 @@ public class ProductDTO extends BaseDTO {
     private Double saleOff;
     private Set<CategoryDTO> categories;
     private Double price;
+    private Set<ReviewDTO> reviews;
 }

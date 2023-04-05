@@ -64,6 +64,17 @@ public class SecurityConfig {
             "/api/v1/posts/**",
     };
 
+    private final String[] ADMIN_DELETE_ALLOW_ROUTES = {
+            "/api/v1/categories/*",
+            "/api/v1/categories/**",
+            "/api/v1/products/*",
+            "/api/v1/products/**",
+            "/api/v1/posts/*",
+            "/api/v1/posts/**",
+            "/api/v1/users/*",
+            "/api/v1/users/**",
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -77,7 +88,7 @@ public class SecurityConfig {
                 .permitAll()
                 .antMatchers(HttpMethod.GET, PUBLIC_GET_ALLOWED_ROUTES)
                 .permitAll()
-                .antMatchers(HttpMethod.DELETE, "/**")
+                .antMatchers(HttpMethod.DELETE, ADMIN_DELETE_ALLOW_ROUTES)
                 .hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()

@@ -1,17 +1,15 @@
 package ecommerce.project.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ecommerce.project.backend.entities.Cart;
 import ecommerce.project.backend.entities.Post;
 import ecommerce.project.backend.enums.Gender;
 import ecommerce.project.backend.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.*;
 import java.sql.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -41,5 +39,4 @@ public class UserDTO extends BaseDTO {
     private Role role;
     private Boolean locked;
     private Boolean enabled;
-    private Set<CartDTO> cart;
 }

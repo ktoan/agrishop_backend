@@ -4,16 +4,15 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ecommerce.project.backend.enums.Gender;
 import ecommerce.project.backend.enums.Role;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -38,8 +37,18 @@ public class User extends BaseEntity implements UserDetails {
     private Gender gender;
     private Boolean locked;
     private Boolean enabled;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Cart> cart = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<ConfirmationToken> confirmationTokens = new HashSet<>();
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Post> posts = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Address> addresses = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -72,4 +81,19 @@ public class User extends BaseEntity implements UserDetails {
         return enabled;
     }
 
+    public void removeCartItem(Long cartItemId) {
+        this.cart.removeIf(c -> Objects.equals(c.getId(), cartItemId));
+    }
+
+    public void removePost(Long postId) {
+        this.posts.removeIf(post -> Objects.equals(post.getId(), postId));
+    }
+
+    public void removeConfirmationToken(Long confirmationTokenId) {
+        this.confirmationTokens.removeIf(confirmationToken -> Objects.equals(confirmationToken.getId(), confirmationTokenId));
+    }
+
+    public void removeAddress(Long addressId) {
+        this.addresses.removeIf(address -> Objects.equals(address.getId(), addressId));
+    }
 }

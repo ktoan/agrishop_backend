@@ -15,4 +15,5 @@ public interface PostService {
     PostDTO getPostById(Long postId);
     PagingResponse fetchPostsByPaging(String s, Integer limit, Integer page, String sortBy, String sortDir);
     List<PostDTO> fetchAllPosts(String s, String sortBy, String sortDir);
+    void deletePost(Long postId);
 }

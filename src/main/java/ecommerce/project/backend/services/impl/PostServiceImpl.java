@@ -4,6 +4,7 @@ import ecommerce.project.backend.dto.PostDTO;
 import ecommerce.project.backend.entities.Image;
 import ecommerce.project.backend.entities.Post;
 import ecommerce.project.backend.entities.User;
+import ecommerce.project.backend.exceptions.NotAccessException;
 import ecommerce.project.backend.exceptions.NotFoundException;
 import ecommerce.project.backend.mappers.PostMapper;
 import ecommerce.project.backend.repositories.PostRepository;
@@ -11,6 +12,7 @@ import ecommerce.project.backend.requests.PostRequest;
 import ecommerce.project.backend.responses.PagingResponse;
 import ecommerce.project.backend.services.ImageService;
 import ecommerce.project.backend.services.PostService;
+import ecommerce.project.backend.services.UserService;
 import ecommerce.project.backend.utils.context.ContextService;
 import ecommerce.project.backend.utils.paging.SortUtils;
 import ecommerce.project.backend.utils.upload.file.FileService;
@@ -22,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ecommerce.project.backend.constants.Messaging.POST_NOT_FOUND_ID_MSG;
@@ -35,6 +38,7 @@ public class PostServiceImpl implements PostService {
     private final FileService fileService;
     private final ContextService contextService;
     private final SortUtils sortUtils;
+    private final UserService userService;
 
     @Override
     public Post savePost(Post post) {
@@ -47,7 +51,12 @@ public class PostServiceImpl implements PostService {
         Image image = new Image(url);
         image = imageService.saveImage(image);
         User user = contextService.loadUserFromContext();
-        Post post = new Post(postRequest.getTitle(), postRequest.getShortDescription(), postRequest.getContent(), image, user);
+        Post post = new Post();
+        post.setTitle(postRequest.getTitle());
+        post.setShortDescription(postRequest.getShortDescription());
+        post.setContent(postRequest.getContent());
+        post.setImage(image);
+        post.setAuthor(user);
         post = savePost(post);
         return postMapper.toDTO(post);
     }
@@ -76,5 +85,17 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post findPostById(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new NotFoundException(String.format(POST_NOT_FOUND_ID_MSG, postId)));
+    }
+
+    @Override
+    public void deletePost(Long postId) {
+        Post post = findPostById(postId);
+        if (!Objects.equals(post.getAuthor().getId(), contextService.loadUserFromContext().getId())) {
+            throw new NotAccessException();
+        }
+        User user = post.getAuthor();
+        user.removePost(postId);
+        userService.saveUser(user);
+        postRepository.delete(post);
     }
 }

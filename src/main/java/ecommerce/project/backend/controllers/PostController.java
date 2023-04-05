@@ -1,7 +1,6 @@
 package ecommerce.project.backend.controllers;
 
 import ecommerce.project.backend.dto.PostDTO;
-import ecommerce.project.backend.dto.ProductDTO;
 import ecommerce.project.backend.requests.PostRequest;
 import ecommerce.project.backend.responses.PagingResponse;
 import ecommerce.project.backend.services.PostService;
@@ -49,6 +48,7 @@ public class PostController {
     }
 
     @PostMapping("/create")
+    @Operation(summary = "Create new post")
     public ResponseEntity<Object> createPost(@ModelAttribute @Valid PostRequest postRequest) {
         PostDTO newPost = postService.createPost(postRequest);
         Map<String, Object> resp = new HashMap<>();
@@ -56,6 +56,7 @@ public class PostController {
         resp.put("newPost", newPost);
         return ResponseEntity.ok(resp);
     }
+
     @GetMapping("/{postId}")
     @Operation(summary = "Get post by its own id")
     public ResponseEntity<Object> getPostById(@PathVariable Long postId) {
@@ -64,5 +65,15 @@ public class PostController {
         resp.put("success", true);
         resp.put("post", post);
         return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{postId}")
+    @Operation(summary = "Delete post")
+    public ResponseEntity<Object> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("msg", "Delete post successfully!");
+        return ResponseEntity.ok(resp);
     }
 }

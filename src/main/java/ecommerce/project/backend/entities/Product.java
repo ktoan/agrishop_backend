@@ -1,6 +1,7 @@
 package ecommerce.project.backend.entities;
 
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -33,6 +34,9 @@ public class Product extends BaseEntity {
     private Set<Category> categories = new HashSet<>();
     @Column(nullable = false)
     private Double price;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Where(clause = "parent_id is null")
+    private Set<Review> reviews = new HashSet<>();
 
     public void addImage(Image image) {
         this.images.add(image);
@@ -48,5 +52,9 @@ public class Product extends BaseEntity {
 
     public void removeCategory(Long categoryId) {
         this.categories.removeIf(category -> Objects.equals(category.getId(), categoryId));
+    }
+
+    public void removeReview(Long reviewId) {
+        this.reviews.removeIf(review -> Objects.equals(review.getId(), reviewId));
     }
 }

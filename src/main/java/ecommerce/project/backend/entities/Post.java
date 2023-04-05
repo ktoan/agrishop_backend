@@ -3,6 +3,7 @@ package ecommerce.project.backend.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -29,4 +30,11 @@ public class Post extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Where(clause = "parent_id is null")
+    private Set<Comment> comments = new HashSet<>();
+
+    public void removeComment(Long commentId) {
+        this.comments.removeIf(comment -> Objects.equals(comment.getId(), commentId));
+    }
 }

@@ -1,7 +1,6 @@
 package ecommerce.project.backend.controllers;
 
 import ecommerce.project.backend.dto.CartDTO;
-import ecommerce.project.backend.entities.Cart;
 import ecommerce.project.backend.requests.CartRequest;
 import ecommerce.project.backend.services.CartService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +21,7 @@ import java.util.Map;
 public class CartController {
     private final CartService cartService;
 
-    @PutMapping("/update-cart")
+    @PutMapping("/update")
     @Operation(summary = "Add/Update product to/in user's cart")
     public ResponseEntity<Object> updateCart(@RequestBody @Valid CartRequest cartRequest) {
         CartDTO cart = cartService.updateCart(cartRequest);
@@ -31,4 +30,15 @@ public class CartController {
         resp.put("cartItem", cart);
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/{cartItemId}")
+    @Operation(summary = "Remove cart item")
+    public ResponseEntity<Object> deleteCartItem(@PathVariable Long cartItemId) {
+        cartService.deleteCartItem(cartItemId);
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("msg", "Remove cart item successfully!");
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
+
 }
