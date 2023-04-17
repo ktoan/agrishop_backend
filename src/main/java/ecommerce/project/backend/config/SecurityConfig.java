@@ -34,6 +34,7 @@ public class SecurityConfig {
     };
 
     private final String[] PUBLIC_GET_ALLOWED_ROUTES = {
+            "/test-connection",
             "/swagger-ui/*",
             "/v3/api-docs/**",
             "/api/v1/users/*",

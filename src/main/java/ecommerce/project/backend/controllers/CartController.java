@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,6 +21,16 @@ import java.util.Map;
 @Tag(name = "Cart")
 public class CartController {
     private final CartService cartService;
+
+    @GetMapping("")
+    @Operation(summary = "Fetch cart of a user")
+    public ResponseEntity<Object> fetchCart() {
+        List<CartDTO> cart = cartService.fetchCartOfSessionUser();
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("cart", cart);
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
 
     @PutMapping("/update")
     @Operation(summary = "Add/Update product to/in user's cart")
