@@ -16,7 +16,10 @@ import ecommerce.project.backend.utils.context.ContextService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static ecommerce.project.backend.constants.Messaging.CART_NOT_FOUND_ID_MSG;
 
@@ -32,6 +35,12 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart saveCart(Cart cart) {
         return cartRepository.save(cart);
+    }
+
+    @Override
+    public List<CartDTO> fetchCartOfSessionUser() {
+        User user = contextService.loadUserFromContext();
+         return user.getCart().stream().map(cartMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
