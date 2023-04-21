@@ -9,6 +9,7 @@ import ecommerce.project.backend.mappers.UserMapper;
 import ecommerce.project.backend.repositories.UserRepository;
 import ecommerce.project.backend.requests.ChangePasswordRequest;
 import ecommerce.project.backend.requests.LoginRequest;
+import ecommerce.project.backend.requests.UpdateUserRequest;
 import ecommerce.project.backend.services.ConfirmationTokenService;
 import ecommerce.project.backend.services.UserService;
 import ecommerce.project.backend.utils.context.ContextService;
@@ -104,24 +105,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO updateUser(Long userId, UserDTO userDTO) {
+    public UserDTO updateUser(Long userId, UpdateUserRequest updateUserRequest) {
         User user = findUserById(userId);
-        if (!userDTO.getEmail().equals(user.getEmail())) {
+        if (!updateUserRequest.getEmail().equals(user.getEmail())) {
             throw new BadRequestException("Email isn't editable!");
         }
         if (!Objects.equals(user.getId(), contextService.loadUserFromContext().getId())) {
             throw new NotAccessException();
         }
-        User updatedUser = userMapper.toEntity(userDTO);
-        updatedUser.setId(userId);
-        updatedUser.setLocked(user.getLocked());
-        updatedUser.setEnabled(user.getEnabled());
-        updatedUser.setRole(user.getRole());
-        updatedUser.setAvatar(user.getAvatar());
-        updatedUser.setCreatedDate(user.getCreatedDate());
-        updatedUser.setPassword(user.getPassword());
-        updatedUser = saveUser(updatedUser);
-        return userMapper.toDTO(updatedUser);
+        user.setFullName(updateUserRequest.getFullName());
+        user.setPhone(updateUserRequest.getPhone());
+        user.setDayOfBirth(updateUserRequest.getDayOfBirth());
+        user.setGender(updateUserRequest.getGender());
+        user = saveUser(user);
+        return userMapper.toDTO(user);
     }
 
     @Override
