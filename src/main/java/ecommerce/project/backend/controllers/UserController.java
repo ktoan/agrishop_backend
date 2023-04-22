@@ -2,6 +2,7 @@ package ecommerce.project.backend.controllers;
 
 import ecommerce.project.backend.dto.UserDTO;
 import ecommerce.project.backend.requests.ChangePasswordRequest;
+import ecommerce.project.backend.requests.UpdateUserRequest;
 import ecommerce.project.backend.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +34,8 @@ public class UserController {
 
     @PutMapping("/update/{userId}")
     @Operation(summary = "Update user's information")
-    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
-        UserDTO updatedUser = userService.updateUser(userId, userDTO);
+    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @RequestBody @Valid UpdateUserRequest updateUserRequest) {
+        UserDTO updatedUser = userService.updateUser(userId, updateUserRequest);
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", true);
         resp.put("updatedUser", updatedUser);
