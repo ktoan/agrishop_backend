@@ -30,7 +30,9 @@ public class SecurityConfig {
             "/api/v1/auth/login",
             "/api/v1/auth/register",
             "/api/v1/auth/confirm-registration",
-            "/api/v1/auth/resend-confirm-code"
+            "/api/v1/auth/resend-confirm-code",
+            "/api/v1/orders/create-payment-intent",
+            "/api/v1/orders/create-order"
     };
 
     private final String[] PUBLIC_GET_ALLOWED_ROUTES = {

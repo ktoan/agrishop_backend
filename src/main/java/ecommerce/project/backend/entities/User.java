@@ -37,6 +37,7 @@ public class User extends BaseEntity implements UserDetails {
     private Gender gender;
     private Boolean locked;
     private Boolean enabled;
+    private String stripeCustomerId;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Cart> cart = new HashSet<>();
