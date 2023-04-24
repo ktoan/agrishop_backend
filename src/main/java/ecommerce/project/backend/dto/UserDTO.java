@@ -39,4 +39,5 @@ public class UserDTO extends BaseDTO {
     private Role role;
     private Boolean locked;
     private Boolean enabled;
+    private String stripeCustomerId;
 }
