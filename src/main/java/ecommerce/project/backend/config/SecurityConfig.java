@@ -30,9 +30,7 @@ public class SecurityConfig {
             "/api/v1/auth/login",
             "/api/v1/auth/register",
             "/api/v1/auth/confirm-registration",
-            "/api/v1/auth/resend-confirm-code",
-            "/api/v1/orders/create-payment-intent",
-            "/api/v1/orders/create-order"
+            "/api/v1/auth/send-confirm-code",
     };
 
     private final String[] PUBLIC_GET_ALLOWED_ROUTES = {
@@ -47,6 +45,10 @@ public class SecurityConfig {
             "/api/v1/categories/**",
             "/api/v1/products/*",
             "/api/v1/products/**",
+    };
+
+    private final String[] ADMIN_GET_ALLOW_ROUTES = {
+            "/api/v1/users",
     };
 
     private final String[] ADMIN_POST_ALLOW_ROUTES = {
@@ -83,6 +85,8 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, ADMIN_GET_ALLOW_ROUTES)
+                .hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, ADMIN_POST_ALLOW_ROUTES)
                 .hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.PUT, ADMIN_PUT_ALLOW_ROUTES)

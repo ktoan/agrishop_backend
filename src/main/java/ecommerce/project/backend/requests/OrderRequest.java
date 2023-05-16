@@ -11,4 +11,5 @@ public class OrderRequest {
     private String description;
     private PaymentMethod paymentMethod;
     private OrderItemRequest[] items;
+    private StripeRequest stripeRequest;
 }

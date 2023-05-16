@@ -2,6 +2,7 @@ package ecommerce.project.backend.entities;
 
 import ecommerce.project.backend.enums.OrderStatus;
 import ecommerce.project.backend.enums.PaymentMethod;
+import ecommerce.project.backend.enums.PaymentStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,6 +29,9 @@ public class Order extends BaseEntity {
     private OrderStatus orderStatus = OrderStatus.CONFIRMING;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod = PaymentMethod.SHIP_CODE;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
 
     public void addOrderItem(OrderItem orderItem) {
         this.orderItems.add(orderItem);
