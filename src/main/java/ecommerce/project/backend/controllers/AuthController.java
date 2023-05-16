@@ -74,7 +74,7 @@ public class AuthController {
         return ResponseEntity.ok(resp);
     }
 
-    @PostMapping("/resend-confirm-code")
+    @PostMapping("/send-confirm-code")
     @Operation(summary = "Resend the code to verify the user own account")
     public ResponseEntity<Object> resendConfirmRegistration(@RequestParam("email") String email) {
         userService.resendConfirmToken(email);

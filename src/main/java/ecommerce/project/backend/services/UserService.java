@@ -7,6 +7,8 @@ import ecommerce.project.backend.requests.LoginRequest;
 import ecommerce.project.backend.requests.UpdateUserRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface UserService {
     User saveUser(User user);
     UserDTO loadUser();
@@ -19,4 +21,5 @@ public interface UserService {
     void resendConfirmToken(String email);
     void changePassword(Long userId, ChangePasswordRequest changePasswordRequest);
     void deleteUser(Long userId);
+    List<UserDTO> fetchAllUsers();
 }

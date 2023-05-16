@@ -37,6 +37,9 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Where(clause = "parent_id is null")
     private Set<Review> reviews = new HashSet<>();
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "qrCode")
+    private Image qrCode;
 
     public void addImage(Image image) {
         this.images.add(image);

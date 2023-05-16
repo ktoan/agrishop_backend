@@ -25,10 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static ecommerce.project.backend.constants.Messaging.*;
 
@@ -50,6 +48,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<UserDTO> fetchAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(userMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override

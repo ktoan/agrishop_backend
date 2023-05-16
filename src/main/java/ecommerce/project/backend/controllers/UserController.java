@@ -22,6 +22,16 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("")
+    @Operation(summary = "Fetch all users")
+    public ResponseEntity<Object> fetchAllUsers() {
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("users", userService.fetchAllUsers());
+        return ResponseEntity.ok(resp);
+    }
+
+
     @PostMapping("/change-avatar/{userId}")
     @Operation(summary = "Change user's avatar")
     public ResponseEntity<Object> changeAvatar(@PathVariable Long userId, @RequestParam("file") MultipartFile file) {
