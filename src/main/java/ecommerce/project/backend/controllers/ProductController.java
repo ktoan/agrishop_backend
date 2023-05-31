@@ -19,6 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/products")
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @RequiredArgsConstructor
 @Tag(name = "Product")
 public class ProductController {
@@ -29,7 +30,7 @@ public class ProductController {
     public ResponseEntity<Object> fetchAllProduct(
             @RequestParam(name = "nameLike", defaultValue = "") String s,
             @RequestParam(name = "sortBy", defaultValue = "id") String sortBy,
-            @RequestParam(name = "sortDir", defaultValue = "asc") String sortDir,
+            @RequestParam(name = "sortDir", defaultValue = "desc") String sortDir,
             @RequestParam(name = "page", required = false) Integer page,
             @RequestParam(name = "limit", required = false) Integer limit) {
         if (page == null || limit == null) {

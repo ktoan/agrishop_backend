@@ -5,6 +5,8 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerCollection;
 import com.stripe.model.Token;
+import com.stripe.net.RequestOptions;
+import com.stripe.param.CustomerRetrieveParams;
 import ecommerce.project.backend.requests.StripeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,19 +22,18 @@ public class PaymentServiceImpl implements PaymentService {
     private String stripeApiKey;
 
     @Override
-    public String createCardToken(StripeRequest stripeRequest, String stripeCustomerId) throws StripeException {
+    public String createCardToken(StripeRequest stripeRequest) throws StripeException {
         Stripe.apiKey = stripeApiKey;
+
         Map<String, Object> card = new HashMap<>();
-        card.put("number", "4242424242424242");
+        card.put("number", "4242 4242 4242 4242");
         card.put("exp_month", stripeRequest.getExpMonth());
         card.put("exp_year", stripeRequest.getExpYear());
         card.put("cvc", stripeRequest.getCvc());
         Map<String, Object> params = new HashMap<>();
         params.put("card", card);
-        params.put("customer", stripeCustomerId);
 
         Token token = Token.create(params);
-
         return token.getId();
     }
 
@@ -40,7 +41,6 @@ public class PaymentServiceImpl implements PaymentService {
     public String createCustomer(StripeCustomerInformation customerInformation) throws Exception {
         Stripe.apiKey = stripeApiKey;
         if (isExistedUserEmail(customerInformation.getEmail())) {
-            System.out.println("Email stripe customer is already taken!");
             throw new Exception("Email stripe customer is already taken!");
         }
         Map<String, Object> customerParams = Map.of("email", customerInformation.getEmail(), "name", customerInformation.getName());

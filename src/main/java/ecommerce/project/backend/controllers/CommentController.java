@@ -18,6 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @Tag(name = "Comment")
 public class CommentController {
     private final CommentService commentService;

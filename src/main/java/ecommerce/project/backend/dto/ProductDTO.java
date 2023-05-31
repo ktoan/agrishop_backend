@@ -1,5 +1,6 @@
 package ecommerce.project.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ecommerce.project.backend.entities.Image;
 import lombok.Getter;
 import lombok.Setter;

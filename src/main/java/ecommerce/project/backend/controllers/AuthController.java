@@ -22,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/v1/auth")
 @RequiredArgsConstructor
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @Tag(name = "Authentication")
 public class AuthController {
     private final UserService userService;
