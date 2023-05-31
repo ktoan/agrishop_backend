@@ -7,6 +7,7 @@ import ecommerce.project.backend.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @Tag(name = "User")
 public class UserController {
     private final UserService userService;
@@ -32,7 +34,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/change-avatar/{userId}")
+    @PostMapping(value = "/change-avatar/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Change user's avatar")
     public ResponseEntity<Object> changeAvatar(@PathVariable Long userId, @RequestParam("file") MultipartFile file) {
         String newAvatar = userService.uploadAvatar(userId, file);

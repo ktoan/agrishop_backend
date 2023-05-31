@@ -74,4 +74,9 @@ public class CartServiceImpl implements CartService {
     public Cart findCartById(Long cartId) {
         return cartRepository.findById(cartId).orElseThrow(() -> new NotFoundException(String.format(CART_NOT_FOUND_ID_MSG, cartId)));
     }
+
+    @Override
+    public Cart findCartByUserAndProduct(User user, Product product) {
+        return cartRepository.findByProductAndUser(product, user);
+    }
 }

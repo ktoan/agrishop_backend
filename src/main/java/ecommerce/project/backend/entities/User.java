@@ -1,5 +1,6 @@
 package ecommerce.project.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ecommerce.project.backend.enums.Gender;
 import ecommerce.project.backend.enums.Role;
@@ -39,15 +40,19 @@ public class User extends BaseEntity implements UserDetails {
     private Boolean enabled;
     private String stripeCustomerId;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Cart> cart = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ConfirmationToken> confirmationTokens = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Post> posts = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Address> addresses = new HashSet<>();
 

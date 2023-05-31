@@ -18,6 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/v1/cart")
 @RequiredArgsConstructor
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @Tag(name = "Cart")
 public class CartController {
     private final CartService cartService;

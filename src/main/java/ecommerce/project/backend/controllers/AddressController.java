@@ -17,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/v1/addresses")
 @RequiredArgsConstructor
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @Tag(name = "Address")
 public class AddressController {
     private final AddressService addressService;

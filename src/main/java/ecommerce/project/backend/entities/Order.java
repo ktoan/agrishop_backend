@@ -1,5 +1,6 @@
 package ecommerce.project.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ecommerce.project.backend.enums.OrderStatus;
 import ecommerce.project.backend.enums.PaymentMethod;
 import ecommerce.project.backend.enums.PaymentStatus;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
     @ManyToOne
     @JoinColumn(name = "address_id", nullable = false)
